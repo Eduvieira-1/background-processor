@@ -1,0 +1,50 @@
+<div class="table-wrap">
+  <table class="comparison">
+    <thead>
+      <tr>
+        <th scope="col">Métrica</th>
+        <th scope="col">Main Thread</th>
+        <th scope="col" class="col--worker">Web Worker</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row">Tempo de execução</th>
+        <td>
+          @if (resultadoMain(); as m) {
+            {{ m.tempoExecucao | number: '1.0-2' }} ms
+          } @else {
+            —
+          }
+        </td>
+        <td class="col--worker">
+          @if (resultadoWorker(); as w) {
+            {{ w.tempoExecucao | number: '1.0-2' }} ms
+          } @else {
+            —
+          }
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">Interface travou?</th>
+        <td class="danger">{{ resultadoMain() ? 'Sim' : '—' }}</td>
+        <td class="col--worker success">{{ resultadoWorker() ? 'Não' : '—' }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  @if (completo()) {
+    <p class="insight">
+      Os dois levaram <strong>aproximadamente o mesmo tempo</strong> de cálculo
+      &mdash; o Worker roda em um núcleo de CPU, igual à Main Thread, então
+      <strong>ele não é mais rápido</strong>
+      @if (diferencaMs(); as delta) {
+        (diferença de {{ delta | number: '1.0-0' }} ms, normalmente um pequeno
+        custo extra de envio dos dados entre as threads).
+      }
+      O ganho do Worker <strong>não é velocidade, é responsividade</strong>:
+      durante o cálculo, a Main Thread congelou a interface e o Worker a manteve
+      totalmente fluida.
+    </p>
+  }
+</div>

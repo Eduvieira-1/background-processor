@@ -1,0 +1,77 @@
+:host {
+  display: block;
+}
+
+.indicators {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.indicator {
+  flex: 1 1 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--surface, #fff);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 10px;
+}
+
+.value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent, #2563eb);
+}
+
+.clock {
+  letter-spacing: 0.05em;
+}
+
+.label {
+  font-size: 0.8rem;
+  color: var(--muted, #64748b);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/*
+  Barra "indeterminada" feita em CSS animando 'width' + 'margin-left'.
+  Essas propriedades disparam LAYOUT a cada frame, trabalho que roda na
+  Main Thread — logo, a animação congela quando a thread está bloqueada.
+  (Se usássemos 'transform', o navegador rodaria na GPU e ela NÃO congelaria.)
+*/
+.bar-track {
+  width: 100%;
+  max-width: 160px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--border, #e2e8f0);
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--accent, #2563eb);
+  animation: indeterminate 1.2s ease-in-out infinite;
+}
+
+@keyframes indeterminate {
+  0% {
+    width: 20%;
+    margin-left: 0%;
+  }
+  50% {
+    width: 60%;
+    margin-left: 40%;
+  }
+  100% {
+    width: 20%;
+    margin-left: 80%;
+  }
+}

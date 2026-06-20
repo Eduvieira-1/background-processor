@@ -1,0 +1,108 @@
+<div class="page">
+  <header class="page__header">
+    <h1>Processador de Arquivos em Background</h1>
+    <p class="subtitle">
+      Demonstração de <strong>Web Workers</strong>: a mesma carga de
+      processamento na <em>Main Thread</em> versus em uma <em>Worker Thread</em>.
+    </p>
+  </header>
+
+  <!-- ZONA DE RESPONSABILIDADE: indicadores que provam se a UI está viva -->
+  <section class="panel panel--live">
+    <div class="panel__title-row">
+      <h2>Indicadores de responsividade</h2>
+      <span class="hint">Observe estes elementos durante cada processamento</span>
+    </div>
+    <app-live-indicators />
+  </section>
+
+  <!-- CONTROLES -->
+  <section class="panel">
+    <h2>Ações</h2>
+    <div class="actions">
+      <button
+        type="button"
+        class="btn btn--primary"
+        (click)="gerarDados()"
+        [disabled]="gerando()"
+      >
+        @if (gerando()) {
+          Gerando…
+        } @else {
+          Gerar {{ QUANTIDADE | number }} registros
+        }
+      </button>
+
+      <button
+        type="button"
+        class="btn"
+        (click)="processarMain()"
+        [disabled]="!temDados() || processandoMain() || processandoWorker()"
+      >
+        @if (processandoMain()) {
+          Processando (Main)…
+        } @else {
+          Processar na Main Thread
+        }
+      </button>
+
+      <button
+        type="button"
+        class="btn btn--accent"
+        (click)="processarWorker()"
+        [disabled]="!temDados() || processandoMain() || processandoWorker()"
+      >
+        @if (processandoWorker()) {
+          Processando (Worker)…
+        } @else {
+          Processar com Web Worker
+        }
+      </button>
+    </div>
+
+    <p class="status">
+      @if (temDados()) {
+        <span class="status__ok">
+          {{ registros().length | number }} registros em memória.
+        </span>
+      } @else {
+        Nenhum dado gerado ainda. Comece gerando os registros.
+      }
+    </p>
+
+    @if (processandoMain()) {
+      <p class="warn">
+        ⚠️ Processando na Main Thread — a interface deve estar congelada agora
+        (contador parado, relógio sem avançar, spinner travado).
+      </p>
+    }
+    @if (processandoWorker()) {
+      <p class="info">
+        ✅ Processando no Worker — a interface continua respondendo normalmente.
+      </p>
+    }
+  </section>
+
+  <!-- RESULTADOS lado a lado -->
+  <section class="results">
+    <app-result-card
+      titulo="Main Thread"
+      modo="main"
+      [resultado]="resultadoMain()"
+    />
+    <app-result-card
+      titulo="Web Worker"
+      modo="worker"
+      [resultado]="resultadoWorker()"
+    />
+  </section>
+
+  <!-- COMPARAÇÃO -->
+  <section class="panel">
+    <h2>Comparação</h2>
+    <app-comparison-table
+      [resultadoMain]="resultadoMain()"
+      [resultadoWorker]="resultadoWorker()"
+    />
+  </section>
+</div>

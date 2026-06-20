@@ -1,0 +1,51 @@
+<article class="card" [class.card--worker]="modo() === 'worker'">
+  <header class="card__head">
+    <h3>{{ titulo() }}</h3>
+    <span class="badge" [class.badge--worker]="modo() === 'worker'">
+      {{ modo() === 'worker' ? 'Worker Thread' : 'Main Thread' }}
+    </span>
+  </header>
+
+  @if (resultado(); as r) {
+    <dl class="metrics">
+      <div class="metric metric--highlight">
+        <dt>Tempo de execução</dt>
+        <dd>{{ r.tempoExecucao | number: '1.0-2' }} ms</dd>
+      </div>
+      <div class="metric">
+        <dt>Total de registros</dt>
+        <dd>{{ r.totalRegistros | number }}</dd>
+      </div>
+      <div class="metric">
+        <dt>Soma dos valores</dt>
+        <dd>{{ r.somaValores | number: '1.2-2' }}</dd>
+      </div>
+      <div class="metric">
+        <dt>Média</dt>
+        <dd>{{ r.media | number: '1.2-2' }}</dd>
+      </div>
+      <div class="metric">
+        <dt>Maior valor</dt>
+        <dd>{{ r.maiorValor | number: '1.2-2' }}</dd>
+      </div>
+      <div class="metric">
+        <dt>Menor valor</dt>
+        <dd>{{ r.menorValor | number: '1.2-2' }}</dd>
+      </div>
+    </dl>
+
+    <div class="categorias">
+      <span class="categorias__title">Quantidade por categoria</span>
+      <ul>
+        @for (par of categorias(); track par[0]) {
+          <li>
+            <span class="cat-nome">{{ par[0] }}</span>
+            <span class="cat-qtd">{{ par[1] | number }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  } @else {
+    <p class="empty">Sem resultado ainda. Gere os dados e execute o processamento.</p>
+  }
+</article>
