@@ -1,5 +1,6 @@
 import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZoneChangeDetection } from '@angular/core';
 import { provideKeycloak } from 'keycloak-angular';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -7,13 +8,13 @@ export const appConfig: ApplicationConfig = {
     // o keycloak-angular registra automaticamente um provideAppInitializer:
     // o app só termina de carregar após a checagem de sessão. Com
     // `login-required`, isso significa redirect imediato à tela de login.
-    // Valores de ambiente LOCAL de estudo — para ambiente real, extrair
-    // para src/environments/ em vez de hardcode.
+    // A config (url/realm/clientId) vem dos environment files; o redirect de
+    // retorno é resolvido em runtime via window.location.origin.
     provideKeycloak({
       config: {
-        url: 'http://localhost:8080',
-        realm: 'estudo',
-        clientId: 'angular-app',
+        url: environment.keycloak.url,
+        realm: environment.keycloak.realm,
+        clientId: environment.keycloak.clientId,
       },
       initOptions: {
         onLoad: 'login-required',
